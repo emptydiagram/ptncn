@@ -28,7 +28,7 @@ where:
 
  - $f_s$ is the component-wise state update activation function, which we assume is the same across all neurons in all layers for the sake of simple notation. You can imagine generalizations where different layers or different units in the same layer use different activation functions.
  - each $y_{t-1}^k$ is thought of as the *corrected* version of $z_{t-1}^k$. See the correction phase below.
- - the $V^k$, $W^k$, $M^k values are all weight matrices that are updated during the correction phase.
+ - the $V^k$, $W^k$, $M^k$ values are all weight matrices that are updated during the correction phase.
 
 ## Predict
 
@@ -50,7 +50,7 @@ $$e^0 := -(z_t^0 - z_{t,o}^0)$$
 
 These error units are used to produce the corrected state vectors:
 
-$$y_t^2 := f_s(a_t^2 - [ \beta E^2 e^1 - \text{sign}(z_t^2) ])$$
+$$y_t^2 := f_s(a_t^2 - [ \beta E^2 e^1 - \lambda \text{sign}(z_t^2) ])$$
 
 $$y_t^1 := f_s(a_t^1 - [\beta E^1 e^0 - \gamma e^1 - \lambda \text{sign}(z_t^1)] )$$
 
@@ -83,3 +83,9 @@ $$\Delta U^1 = d_t^1 (z_{t-1}^2)^\top$$
 $$\Delta E^1 = (d_t^1 - d_{t-1}^1)(e^0)^\top$$
 
 $$\Delta E^2 = (d_t^2 - d_{t-1}^2)(e^1)^\top$$
+
+Contrary to the paper, the implementation calls the $\Delta E^k$ rules the "temporal error rule", and does not actually use it: instead, it uses:
+
+$$\Delta E^k = \alpha (\Delta W^k)^\top$$
+
+where $\alpha = 1$ in the implementation.
